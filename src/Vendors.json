@@ -1,0 +1,26 @@
+[
+    {
+        "slno" : 1, 
+        "Code" : null, 
+        "Name" : "ABB", 
+        "Type" : "MANUFACTURER", 
+        "RefNo" : "101", 
+        "RefNoDup" : "101", 
+        "Refflag" : "PART NUMBER", 
+        "s" : 1, 
+        "l" : 1, 
+        "shortmfr" : "ABB"
+    }, 
+    {
+        "slno" : 1, 
+        "Code" : null, 
+        "Name" : "TIMKEN", 
+        "Type" : "MANUFACTURER", 
+        "RefNo" : "1012", 
+        "RefNoDup" : "102", 
+        "Refflag" : "PART NUMBER", 
+        "s" : 1, 
+        "l" : 1, 
+        "shortmfr" : "ABB"
+    }
+]

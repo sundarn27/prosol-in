@@ -1,0 +1,142 @@
+[
+    {
+        "Characteristic" : "PART NAME", 
+        "Value" : "PISTON", 
+        "UOM" : "", 
+        "Squence" : 10, 
+        "ShortSquence" : 10, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "PART TYPE", 
+        "Value" : "--", 
+        "UOM" : "", 
+        "Squence" : 20, 
+        "ShortSquence" : 20, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "PART NUMBER", 
+        "Value" : "836336530", 
+        "UOM" : "", 
+        "Squence" : 30, 
+        "ShortSquence" : 30, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "PART MANUFACTURER", 
+        "Value" : "SISU", 
+        "UOM" : "", 
+        "Squence" : 40, 
+        "ShortSquence" : 40, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "PART SIZE", 
+        "Value" : "200", 
+        "UOM" : "MM", 
+        "Squence" : 50, 
+        "ShortSquence" : 50, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "PART MATERIAL", 
+        "Value" : "", 
+        "UOM" : "", 
+        "Squence" : 60, 
+        "ShortSquence" : 60, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "SUPERIOR EQUIPMENT NAME", 
+        "Value" : "", 
+        "UOM" : "", 
+        "Squence" : 70, 
+        "ShortSquence" : 70, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "EQUIPMENT NAME", 
+        "Value" : "15 TON FORKLIFT", 
+        "UOM" : "", 
+        "Squence" : 80, 
+        "ShortSquence" : 80, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "EQUIPMENT MODEL", 
+        "Value" : "TD1642-A1660", 
+        "UOM" : "", 
+        "Squence" : 90, 
+        "ShortSquence" : 90, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "DRAWING NUMBER", 
+        "Value" : "", 
+        "UOM" : "", 
+        "Squence" : 100, 
+        "ShortSquence" : 100, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "POSITION NUMBER", 
+        "Value" : "", 
+        "UOM" : "", 
+        "Squence" : 110, 
+        "ShortSquence" : 110, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "SERIAL NUMBER", 
+        "Value" : "1105/11057-125A", 
+        "UOM" : "", 
+        "Squence" : 120, 
+        "ShortSquence" : 120, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "TAG NUMBER", 
+        "Value" : "", 
+        "UOM" : "", 
+        "Squence" : 130, 
+        "ShortSquence" : 130, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }, 
+    {
+        "Characteristic" : "ADDITIONAL INFORMATION", 
+        "Value" : "FOR VALMET DIESEL ENGINE,MODEL:TD 612DS", 
+        "UOM" : "", 
+        "Squence" : 140, 
+        "ShortSquence" : 140, 
+        "Source" : "", 
+        "SourceUrl" : "", 
+        "Definition" : null
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+    "itemId" : "P-001",
+    "itemName" : "Milk",
+    "category" : "Dairy Products",
+    "purchasePrice" : "20",
+    "purchaseDate" : "14-07-2024",
+    "gst" : "0.2"
+},
+{
+    "itemId" : "P-002",
+    "itemName" : "Curd",
+    "category" : "Dairy Products",
+    "purchasePrice" : "40",
+    "purchaseDate" : "15-07-2024",
+    "gst" : "0.2"
+},
+{
+    "itemId" : "P-003",
+    "itemName" : "Gee",
+    "category" : "Dairy Products",
+    "purchasePrice" : "80",
+    "purchaseDate" : "15-07-2024",
+    "gst" : "0.2"
+}
+]
