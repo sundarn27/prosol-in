@@ -9,7 +9,7 @@ export default function BreadCrumb() {
 
   return (
     <>
-      <Breadcrumb style={{ paddingTop: '10px', paddingLeft: '20px' }}>
+      <Breadcrumb style={{ paddingTop: '5px',paddingBottom: '5px', paddingLeft: '20px',position:'fixed',width:'100%',zIndex:1000,background:'#f5f5f5' }}>
         <Breadcrumb.Item>
           <Link to="/Home">
             <HomeOutlined />

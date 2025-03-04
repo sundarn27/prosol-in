@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
+import ChatBot from "./ChatBot";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ export default function Home() {
   {isLoading ? (
     <Loading />
   ) : (
+    <>
     <Row gutter={16} style={{ padding: "15px", gap: "40px" }}>
       {modules
         .sort((a, b) => a.Seq.localeCompare(b.Seq))
@@ -96,6 +98,7 @@ export default function Home() {
           </Col>
         ))}
     </Row>
+    </>
   )}
 </>
   );

@@ -9,7 +9,8 @@ export const fetchDataList = createAsyncThunk(
       console.log(paramData);
       const response = await axios.post(
         "http://localhost:50129/api/GetDataList",
-        paramData
+        paramData,
+        { headers: { "Content-Type": "application/json" } }
       );
       return response.data;
     } catch (error) {

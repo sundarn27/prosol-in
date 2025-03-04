@@ -4,7 +4,7 @@ import TextArea from "antd/es/input/TextArea";
 
 export default function Attributes({
   characteristicsData,
-  onCharacteristicsChange,
+  onCharacteristicsChange = () => {},
 }) {
   // console.log("Characteristics Data :", characteristicsData);
 
@@ -16,17 +16,25 @@ export default function Attributes({
     }
   }, [characteristicsData]);
 
-  // const characteristicsString = JSON.stringify(characteristics, null, 2);
-  // console.log(characteristicsString);
-
   const handleValueChange = (index, newValue) => {
     const updatedCharacteristics = characteristics.map((item, i) =>
       i === index ? { ...item, Value: newValue } : item
     );
 
     setCharacteristics(updatedCharacteristics);
-    onCharacteristicsChange(updatedCharacteristics);
+    if (typeof onCharacteristicsChange === "function") {
+      onCharacteristicsChange(updatedCharacteristics);
+    }
   };
+  
+  // const handleUOMChange = (index, newUOM) => {
+  //   const updatedCharacteristics = characteristics.map((item, i) =>
+  //     i === index ? { ...item, uom: newUOM } : item
+  //   );
+
+  //   setCharacteristics(updatedCharacteristics);
+  //   onCharacteristicsChange(updatedCharacteristics);
+  // };
 
   return (
     <>
@@ -34,15 +42,18 @@ export default function Attributes({
         {characteristics.length > 0 ? (
           <table>
             <thead>
-              <tr style={{display:'flex',width:'100%'}}>
-                <th style={{width:'50%'}}>Characteristic</th>
-                <th style={{width:'40%'}}>Value</th>
-                <th style={{width:'5%'}}>UOM</th>
+              <tr style={{ display: "flex", width: "100%" }}>
+                <th style={{ width: "50%" }}>Characteristic</th>
+                <th style={{ width: "40%" }}>Value</th>
+                <th style={{ width: "5%" }}>UOM</th>
               </tr>
             </thead>
             <tbody>
               {characteristics.map((cha, index) => (
-                <tr key={index} style={{display:'flex',alignItems:'flex-start'}}>
+                <tr
+                  key={index}
+                  style={{ display: "flex", alignItems: "flex-start" }}
+                >
                   <td>
                     <Input
                       style={{ width: "300px" }}
@@ -51,7 +62,13 @@ export default function Attributes({
                       disabled
                     />
                   </td>
-                  <td style={{display:'flex',flexDirection:'column',gap:'1px'}}>
+                  <td
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1px",
+                    }}
+                  >
                     <Input
                       style={{ width: "200px" }}
                       size="small"

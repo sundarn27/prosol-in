@@ -64,73 +64,81 @@ export default function CatalogueEdit() {
     dispatch(fetchDictionaryList());
   }, [dispatch]);
 
+  //Get Noun
   useEffect(() => {
     setDictionary(dictionaryDataList);
     console.log("Dictionary List", dictionaryDataList);
-    const dumbNoun = dictionaryDataList.map((i) => i.Noun);
-    const nounWithoutDuplicates = [...new Set(dumbNoun)];
+
+    const nounWithoutDuplicates = [
+      ...new Set(dictionaryDataList.map((i) => i.Noun)),
+    ];
     setNounList(nounWithoutDuplicates);
-    console.log("Noun List", nounList);
+    console.log("Noun List", nounWithoutDuplicates);
+  }, [dictionaryDataList]);
 
-    if (materialData && materialData.noun) {
-      const filteredModifiers = dictionaryDataList.filter(
-        (i) => i.Noun === materialData.noun
-      );
-      const dumbModifier = filteredModifiers.map((i) => i.Modifier);
-      const modifierWithoutDuplicates = [...new Set(dumbModifier)];
-      setModifierList(modifierWithoutDuplicates);
-    }
-    console.log("Modifier List", modifierList);
+  //Get Modifier
+  useEffect(() => {
+    if (!materialData?.Noun) return;
 
-    if (materialData && materialData.noun && materialData.modifier) {
+    const filteredModifiers = dictionaryDataList.filter(
+      (i) => i.Noun === materialData.Noun
+    );
+    const modifierWithoutDuplicates = [
+      ...new Set(filteredModifiers.map((i) => i.Modifier)),
+    ];
+
+    setModifierList(modifierWithoutDuplicates);
+    console.log("Modifier List", modifierWithoutDuplicates);
+  }, [materialData?.Noun, dictionaryDataList]);
+
+  //Get Characteristics List
+  useEffect(() => {
+    console.log("Material Noun:",materialData.Noun)
+    if (materialData?.Noun && materialData?.Modifier) {  
       const filteredChars = dictionaryDataList.filter(
         (i) =>
-          i.Noun === materialData.noun && i.Modifier === materialData.modifier
+          i.Noun === materialData.Noun && i.Modifier === materialData.Modifier
       );
-      setCharacteristicsList(filteredChars);
-    }
-
-    if (materialData && materialData.characteristics) {
-      console.log("Old Characteristics List", materialData.characteristics);
-      const updatedCharacteristics = characteristicsList.map((value1) => {
-        // Find matching item from cat.Characteristics
-        const matchingValue = materialData.characteristics.find(
-          (value2) => value2.characteristic === value1.Characteristic
-        );
-
-        if (matchingValue) {
-          return {
-            ...value1,
-            Value: matchingValue.value,
-            UOM: matchingValue.uom,
-            Source: matchingValue.source,
-            SourceUrl: matchingValue.sourceUrl,
-            Squence: value1.sequence,
-            ShortSquence: value1.shortSequence,
-            //UomMandatory: value1.uomMandatory,
-            //Mandatory: cat.Exchk ? 'No' : value1.Mandatory,
-            // Uncomment the lines below if you want to add additional fields
-            // Abbrivation: matchingValue.Abbrevated,
-            // Approve: matchingValue.Approve,
-            // btnName: "Approve",
-          };
-        }
-
-        return value1;
-      });
-
+  
+      const updatedCharacteristics = filteredChars.map((item) => ({
+        ...item,
+        Value: "",
+        Abbrivate: "",
+      }));
+  
       setCharacteristicsList(updatedCharacteristics);
     }
-    console.log("Characteristics List", characteristicsList);
-  }, [
-    dictionaryDataList,
-    dictionaryDataLoading,
-    dictionaryDataError,
-    nounList,
-    modifierList,
-    characteristicsList,
-    materialData,
-  ]);
+  }, [materialData?.Noun, materialData?.Modifier, dictionaryDataList]);
+  
+
+  console.log("Updated Characteristics:", characteristicsList);
+  // Merge Characteristics Data when materialData.characteristics is available
+  // useEffect(() => {
+  //   if (!materialData?.characteristics) return;
+
+  //   console.log("Old Characteristics List", materialData.characteristics);
+
+  //   const updatedCharacteristics = characteristicsList.map((charItem) => {
+  //     const matchingValue = materialData.characteristics.find(
+  //       (value) => value.characteristic === charItem.Characteristic
+  //     );
+
+  //     return matchingValue
+  //       ? {
+  //           ...charItem,
+  //           Value: matchingValue.value,
+  //           UOM: matchingValue.uom,
+  //           Source: matchingValue.source,
+  //           SourceUrl: matchingValue.sourceUrl,
+  //           Squence: charItem.sequence,
+  //           ShortSquence: charItem.shortSequence,
+  //         }
+  //       : charItem;
+  //   });
+
+  //   setCharacteristicsList(updatedCharacteristics);
+  //   console.log("Characteristics List", updatedCharacteristics);
+  // }, [materialData?.characteristics, characteristicsList]);
 
   const toggleOpen = () => {
     setOpen((prev) => !prev);
@@ -167,20 +175,25 @@ export default function CatalogueEdit() {
       key: "1",
       label: "Characteristics",
       children: (
-        <Attributes characteristicsData={materialData?.characteristics} />
+        <Attributes
+          characteristicsData={characteristicsList}
+          onCharacteristicsChange={(updatedData) =>
+            setCharacteristicsList(updatedData)
+          }
+        />
       ),
       style: panelStyle,
     },
     {
       key: "2",
       label: "Vendor Details",
-      children: <Vendors VendorData={materialData?.vendorSuppliers} />,
+      children: <Vendors VendorData={materialData?.Vendorsuppliers} />,
       style: panelStyle,
     },
     {
       key: "3",
       label: "Equipment Details",
-      children: <Equipments EquipmentData={materialData?.equipment} />,
+      children: <Equipments EquipmentData={materialData?.Equipment} />,
       style: panelStyle,
     },
   ];
@@ -188,7 +201,7 @@ export default function CatalogueEdit() {
   const handleNounChange = (value) => {
     setMaterialData((prevMaterialData) => ({
       ...prevMaterialData,
-      noun: value,
+      Noun: value,
     }));
     if (value) {
       var filterModifiers = modifierList.filter((m) => m.Noun == value);
@@ -212,7 +225,7 @@ export default function CatalogueEdit() {
   const handleModifierChange = (value) => {
     setMaterialData({
       ...materialData,
-      modifier: value,
+      Modifier: value,
     });
   };
 
@@ -257,7 +270,7 @@ export default function CatalogueEdit() {
                 icon={<StepBackwardOutlined />}
                 style={{ float: "left" }}
               ></Button>
-              <h4>ITEM CODE : {materialData.itemCode}</h4>
+              <h4>ITEM CODE : {materialData.Itemcode}</h4>
               <Button
                 type="primary"
                 size="small"
@@ -268,10 +281,10 @@ export default function CatalogueEdit() {
         </Affix>
         <div className="legacy"></div>
         <div className="cat-body">
-          <Affix offsetTop={132} onChange={(affixed) => console.log(affixed)}>
+          <Affix offsetTop={120} onChange={(affixed) => console.log(affixed)}>
             <div className="input-group">
               <label>Legacy</label>
-              <TextArea value={materialData.legacy} rows={2} />
+              <TextArea value={materialData.Legacy} rows={2} />
             </div>
             <div
               className="row"
@@ -283,7 +296,12 @@ export default function CatalogueEdit() {
                 <Select
                   showSearch
                   size="small"
-                  value={materialData.noun}
+                  // value={
+                  //   filteredNounList.some((noun) => noun === materialData.Noun)
+                  //     ? materialData.Noun
+                  //     : undefined
+                  // }
+                  value={materialData.Noun}
                   placeholder="Type Noun"
                   optionFilterProp="label"
                   onSearch={handleNounSearch}
@@ -292,6 +310,7 @@ export default function CatalogueEdit() {
                     value: d,
                     label: d,
                   }))}
+                  notFoundContent={false}
                 />
               </div>
               <div className="col-input">
@@ -300,13 +319,14 @@ export default function CatalogueEdit() {
                 <Select
                   showSearch
                   size="small"
-                  value={
-                    modifierList.some(
-                      (modifier) => modifier === materialData.modifier
-                    )
-                      ? materialData.modifier
-                      : undefined
-                  }
+                  // value={
+                  //   modifierList.some(
+                  //     (Modifier) => Modifier === materialData.Modifier
+                  //   )
+                  //     ? materialData.Modifier
+                  //     : undefined
+                  // }
+                  value={materialData.Modifier}
                   placeholder="Type Modifier"
                   optionFilterProp="label"
                   onSearch={handleModifierSearch}
@@ -315,7 +335,7 @@ export default function CatalogueEdit() {
                     value: d,
                     label: d,
                   }))}
-                  disabled={!materialData.noun}
+                  disabled={!materialData.Noun}
                 />
               </div>
               <div className="col-input">

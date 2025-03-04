@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Layout, Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as Icons from "@ant-design/icons";
+import ChatBot from "./ChatBot";
 
 const { Sider } = Layout;
 
@@ -53,6 +54,7 @@ const Sidebar = ({ collapsed, sideData, onClick }) => {
           </Menu.Item>
         ))}
       </Menu>
+      <ChatBot />
     </Sider>
   );
 };

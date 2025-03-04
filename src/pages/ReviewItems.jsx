@@ -332,6 +332,7 @@ import React, {
         ) :(
           <>
             <BreadCrumb />
+            <div style={{marginTop:'20px'}}>
             <div className="column-a">
               <div className="row">
                 <div className="row" style={{ width: "50%" }}>
@@ -354,6 +355,7 @@ import React, {
                 </div> */}
               </div>
               <Table columns={columns} dataSource={data} rowKey="_id" />
+              </div>
             </div>
           </>
         )}

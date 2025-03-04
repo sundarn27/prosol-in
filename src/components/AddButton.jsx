@@ -10,7 +10,7 @@ export default function AddButton({ toggleCard }){
         <>
             <Button type="primary" onClick={toggleCard} >
               <PlusOutlined />
-              Add Item
+              Add
             </Button>
         </>
     )

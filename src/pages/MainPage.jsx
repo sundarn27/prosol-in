@@ -14,6 +14,10 @@ import ErrorPage from "./ErrorPage";
 import Import from "./Import";
 import PvItems from "./PvItems";
 import ReviewItems from "./ReviewItems";
+import Dashboard from "./Dashboard";
+import AddUser from "../components/AddUser";
+import Users from "./Users";
+import ChatBot from "../components/ChatBot";
 
 export default function MainPage() {
   const { moduleName, pageName, id } = useParams();
@@ -37,7 +41,8 @@ export default function MainPage() {
         console.log(filteredPages);
         const newSidebarItems = filteredPages.map((item) => ({
           key: item.Page,
-          label: item.Page,
+          label: item.Label,
+          page: item.Page,
           module: moduleName,
           seq: item.Sequence,
           icon: item.Icon,
@@ -71,8 +76,14 @@ export default function MainPage() {
   const renderComponent = () => {
     console.log(selectedComponent);
     switch (selectedComponent) {
+      case "Users/":
+        return <Users />;
+      case "Users/Add":
+        return <Users />;
       case "Material/":
         return <CatalogueItems />;
+      case "Material/Dashboard":
+        return <Dashboard />;
       case "Material/Import":
         return <Import />;
       case "Material/PV":
@@ -103,24 +114,26 @@ export default function MainPage() {
   };
 
   return (
-    <Layout>
-      <Navbar collapsed={collapsed} toggleSidebar={toggleSidebar} />
+    <>
+      <Layout>
+        <Navbar collapsed={collapsed} toggleSidebar={toggleSidebar} />
 
-      <Layout style={{ marginTop: "65px" }}>
-        <Sidebar
-          collapsed={collapsed}
-          sideData={sidebarItems}
-          onClick={handleSidebarClick}
-        />
-        <Layout
-          style={{
-            marginLeft: collapsed ? 80 : 240,
-            transition: "margin-left 0.2s",
-          }}
-        >
-          {renderComponent()}
+        <Layout style={{ marginTop: "65px" }}>
+          <Sidebar
+            collapsed={collapsed}
+            sideData={sidebarItems}
+            onClick={handleSidebarClick}
+          />
+          <Layout
+            style={{
+              marginLeft: collapsed ? 80 : 240,
+              transition: "margin-left 0.2s",
+            }}
+          >
+            {renderComponent()}
+          </Layout>
         </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 }

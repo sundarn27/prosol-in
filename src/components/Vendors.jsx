@@ -88,7 +88,7 @@ export default function Vendors({ VendorData }) {
                   size="small"
                   placeholder="Select "
                   style={{ flex: 1 }}
-                  value={ven.type}
+                  value={ven.Type}
                   options={[
                     { value: "MANUFACTURER", label: "MANUFACTURER" },
                     { value: "SUPPLIER", label: "SUPPLIER" },
@@ -96,14 +96,14 @@ export default function Vendors({ VendorData }) {
                 />
               </td>
               <td>
-                <Input size="small" value={ven.name} />
+                <Input size="small" value={ven.Name} />
               </td>
               <td>
                 <Select
                   size="small"
                   placeholder="Select"
                   style={{ flex: 1 }}
-                  value={ven.refFlag}
+                  value={ven.Refflag}
                   options={[
                     { value: "PART NUMBER", label: "PART NUMBER" },
                     { value: "MODEL NUMBER", label: "MODEL NUMBER" },
@@ -114,7 +114,7 @@ export default function Vendors({ VendorData }) {
                 />
               </td>
               <td>
-                <Input size="small" value={ven.refNo} />
+                <Input size="small" value={ven.RefNo} />
               </td>
               <td>
                 <Checkbox

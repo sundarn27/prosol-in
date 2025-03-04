@@ -19,10 +19,10 @@ export default function ChatBot() {
 
   return (
     <>
-      <FloatButton.Group
+     <FloatButton.Group
         open={open}
         trigger="click"
-        style={{ insetInlineStart: 25 }}
+        style={{ insetInlineEnd: 25,bottom:25 }}
         icon={<CustomerServiceOutlined />}
         onClick={toggleOpen}
         tooltip="Help?"

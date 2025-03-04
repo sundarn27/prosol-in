@@ -24,90 +24,36 @@ import Loading from "../components/Loading";
 import axios from "axios";
 import BreadCrumb from "../components/BreadCrumb";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataList } from "../features/materialSlice";
-import TableSkeleton from "../components/TableSkeleton";
-import CatalogueEdit from "./CatalogueEdit";
-import { Link, useNavigate } from "react-router-dom";
-import ErrorPage from "../pages/ErrorPage";
+import { fetchUserList } from "../features/userSlice";
 
-export default function CatalogueItems() {
+export default function Users() {
+  const dispatch = useDispatch();
+  //const [loading, setLoading] = useState(false);
+  const [isAddForm, setIsAddForm] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [formattedUsers, setFormattedUsers] = useState([]);
+  const [singleData, setSingleData] = useState({});
+  const [button, setButton] = useState("Submit");
+  const { loading, error, data } = useSelector((state) => state.userData);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [isAddForm, setIsAddForm] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [data, setData] = useState([]);
-  const [singleData, setSingleData] = useState({});
-  const [button, setButton] = useState("Submit");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const {
-    data: materialDataList,
-    loading: materialDataLoading,
-    error: materialDataError,
-  } = useSelector((state) => state.materialData);
-
-  useEffect(() => {
-    const userId = sessionStorage.getItem("Userid");
-
-    if (!userId) {
-      alert("User information is missing. Please log in again.");
-      return;
-    }
-    dispatch(fetchDataList({ UserId: userId, Status: "Catalogue" }));
-  }, [dispatch]);
-
-  // console.log(JSON.stringify(materialDataList, materialDataLoading, materialDataError));
-
   const searchInput = useRef(null);
 
-  // console.log(`${process.env.REACT_APP_API_BASE_URL}`);
-
-  // const getData = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_API_BASE_URL}/api/GetData`
-  //     );
-  //     console.log("API Response:", response.data);
-  //     setData(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
+  //   console.log(`${process.env.REACT_APP_API_BASE_URL}`);
 
   useEffect(() => {
-    if (Array.isArray(materialDataList)) {
-      console.log(
-        JSON.stringify(
-          "List Response :" + materialDataList,
-          materialDataLoading,
-          materialDataError
-        )
-      );
-      setData(
-        materialDataList.map((item) => {
-          return {
-            id: item._id,
-            itemCode: item.Itemcode,
-            materialCode: item.Materialcode,
-            legacy: item.Legacy,
-            noun: item.Noun,
-            modifier: item.Modifier,
-            status:
-            item.ItemStatus === 0
-              ? "Catalogue" :
-              item.ItemStatus === 13
-                ? "Catalogue"
-                : item.ItemStatus === -2
-                ? "Clarification"
-                : "",
-          };
-        })
-      );
-    }
-  }, [materialDataList, materialDataLoading, materialDataError]);
+    const userListAction = dispatch(fetchUserList());
+    setUsers(data);
+  }, [dispatch]);
+
+  const onSearch = (value, _e, info) => console.log(info?.source, value);
+
+  const toggleCard = () => {
+    setButton("Submit");
+    setIsAddForm(!isAddForm);
+    // getData();
+  };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -227,61 +173,49 @@ export default function CatalogueItems() {
     // setIsEdit(!isEdit);
     setButton("Update");
     setSingleData(itm);
-    navigate(`/Material/Catalogue/${itm.itemCode}`);
   };
 
   const columns = useMemo(
     () => [
       {
         title: (
-          <span style={{ fontSize: "12px", fontWeight: "bold" }}>
-            ITEM CODE
-          </span>
+          <span style={{ fontSize: "12px", fontWeight: "bold" }}>USER ID</span>
         ),
-        dataIndex: "itemCode",
-        key: "itemCode",
+        dataIndex: "userId",
+        key: "userId",
         width: "20%",
-        ...getColumnSearchProps("itemCode"),
+        ...getColumnSearchProps("userId"),
       },
       {
         title: (
           <span style={{ fontSize: "12px", fontWeight: "bold" }}>
-            MATERIAL CODE
+            USER NAME
           </span>
         ),
-        dataIndex: "materialCode",
-        key: "materialCode",
+        dataIndex: "fullName",
+        key: "fullName",
         width: "20%",
-        ...getColumnSearchProps("materialCode"),
+        ...getColumnSearchProps("fullName"),
       },
       {
         title: (
-          <span style={{ fontSize: "12px", fontWeight: "bold" }}>
-            DESCRIPTION
-          </span>
+          <span style={{ fontSize: "12px", fontWeight: "bold" }}>EMAIL</span>
         ),
-        dataIndex: "legacy",
-        key: "legacy",
+        dataIndex: "email",
+        key: "email",
         width: "30%",
-        ...getColumnSearchProps("legacy"),
+        ...getColumnSearchProps("email"),
       },
       {
         title: (
-          <span style={{ fontSize: "12px", fontWeight: "bold" }}>NOUN</span>
+          <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+            DEPARTMENT
+          </span>
         ),
-        dataIndex: "noun",
-        key: "noun",
+        dataIndex: "department",
+        key: "department",
         width: "15%",
-        ...getColumnSearchProps("noun"),
-      },
-      {
-        title: (
-          <span style={{ fontSize: "12px", fontWeight: "bold" }}>MODIFIER</span>
-        ),
-        dataIndex: "modifier",
-        key: "modifier",
-        width: "15%",
-        ...getColumnSearchProps("modifier"),
+        ...getColumnSearchProps("department"),
       },
       {
         title: (
@@ -312,65 +246,65 @@ export default function CatalogueItems() {
     [handleEdit]
   );
 
-  // const start = () => {
-  //   setLoading(true);
-  //   setData(rows);
-  //   setTimeout(() => {
-  //     setSelectedRowKeys([]);
-  //     setLoading(false);
-  //   }, 1000);
-  // };
+  useEffect(() => {
+    if (Array.isArray(users) && users.length > 0) {
+      console.log("List Response:", users);
+      setFormattedUsers(
+        users.map((item) => ({
+          id: item._id,
+          userId: item.Userid,
+          userName: item.UserName,
+          email: item.EmailId,
+          fullName: `${item.FirstName} ${item.LastName}`,
+          status: item.Islive,
+          department: item.Departmentname,
+        }))
+      );
+    }
+  }, [users]);
 
-  const hasSelected = selectedRowKeys.length > 0;
-
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
-
-  //   const toggleCard = () => {
-  //     setButton("Submit");
-  //     setIsAddForm(!isAddForm);
-  //     getData();
-  //   };
-  // console.log(materialDataError)
-  // if(materialDataError){
-  //   return(
-  //     <ErrorPage />
-  //   )
-  // }
+  console.log("Formatted Users:", formattedUsers);
 
   return (
     <>
-      {materialDataLoading ? (
-        <TableSkeleton />
-      ) : (
-        <>
-          <BreadCrumb />
-          <div style={{ marginTop: "20px" }}>
-            <div className="column-a">
-              <div className="row">
-                <div className="row" style={{ width: "50%" }}>
-                  <Search
-                    placeholder="input search text"
-                    allowClear
-                    enterButton="Search"
-                    size="large"
-                    onSearch={onSearch}
-                  />
-                  {/* <Tooltip title="Reload">
+      {/* <Loading /> */}
+      {isAddForm ? (
+        <AddFrom
+          isVisible={isAddForm}
+          toggleCard={toggleCard}
+          singleData={singleData}
+          button={button}
+        />
+      ) : null}
+      <BreadCrumb />
+      <div className="column-a" style={{ marginTop: "20px",marginBottom:'0px',paddingBottom:0 }}>
+        <div className="row">
+          <div className="row" style={{ width: "50%" }}>
+            {/* <Search
+              placeholder="input search text"
+              allowClear
+              enterButton="Search"
+              size="large"
+              onSearch={onSearch}
+            /> */}
+            {/* <Tooltip title="Reload">
               <Button type="primary" danger shape="circle" icon={<ReloadOutlined />} />
             </Tooltip> */}
-                  {/* <Button type="primary" onClick={start} loading={loading}>
+            {/* <Button type="primary" onClick={start} loading={loading}>
               Search
             </Button> */}
-                </div>
-                {/* <div className="row" style={{ justifyContent: "end" }}>
-                <AddButton toggleCard={toggleCard} />
-              </div> */}
-              </div>
-              <Table columns={columns} dataSource={data} rowKey="_id" />
-            </div>
           </div>
-        </>
-      )}
+          <div className="row" style={{ justifyContent: "end" }}>
+            <AddButton toggleCard={toggleCard} />
+          </div>
+        </div>
+        <Table
+          columns={columns}
+          dataSource={formattedUsers}
+          pagination={{ pageSize: 6 }}
+          rowKey="id"
+        />
+      </div>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, Button, Dropdown, Layout, Menu } from "antd";
 import {
   MenuFoldOutlined,
@@ -7,6 +7,8 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Title from "../images/title-logo.png"
+import Sidebar from "./Sidebar";
+import axios from "axios";
 
 const { Header } = Layout;
 
@@ -19,7 +21,7 @@ const Navbar = ({ collapsed, toggleSidebar }) => {
 
   const handleProfileClick = (e) => {
     if (e.key === "profile") {
-      navigate("/profile");
+      navigate("/Users/MyProfile");
     } else if (e.key === "logout") {
       navigate("/");
     }
@@ -52,7 +54,7 @@ const Navbar = ({ collapsed, toggleSidebar }) => {
             style={{ marginLeft: 16,color:"#fff" }}
           />
           {/* <span style={{ marginLeft: 16,color:"#fff",width:'100%' }}>Supply Bee</span> */}
-          <img style={{ marginBottom: 5,width:'100px' }} src={Title} alt="PROSOL" />
+          <img style={{ marginBottom: 5,paddingLeft: 10,width:'75px' }} src={Title} alt="PROSOL" />
           <div className="roww" style={{ justifyContent: "end" }}>
             <Dropdown overlay={menu}>
               <Avatar

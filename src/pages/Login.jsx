@@ -1,93 +1,87 @@
-import React, { useContext, useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { AuthContext } from "../context/AuthContext";
-import { auth } from "../firebase";
-import { useNavigate } from "react-router-dom";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { styled } from "@mui/material/styles";
-import { purple } from "@mui/material/colors";
-import axios from "axios";
-import { Button, Card, Checkbox, Form, Input } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import users from "../users.json";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogin } from "../features/authSlice";
 import loginImage from "../images/login.png";
-import titleImage from "../images/title_black.jfif";
-import Sidebar from "../components/Sidebar";
-
-const SubmitButton = styled(LoadingButton)(({ theme }) => ({
-  color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: purple[500],
-  color: "white",
-  "&:hover": {
-    backgroundColor: purple[700],
-  },
-}));
+import { Alert, Button, Card, Checkbox, Form, Input } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { fetchUserDetails } from "../features/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error, user } = useSelector((state) => state.auth);
 
-  const [err, setErr] = useState(false);
   const [username, setUsername] = useState("");
+  const [userError, setUserError] = useState("");
+  const [notUser, setNotUser] = useState(false);
   const [password, setPassword] = useState("");
-  const { dispatch } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
-  const [userData, setUserData] = useState(users);
+  const [passwordError, setPasswordError] = useState("");
+  const [notPassword, setNotPassword] = useState(false);
+  const [isError, setIsError] = useState("");
 
-  // const navigate = useNavigate();
+  const onClose = (e) => {
+    console.log(e, "I was closed.");
+    setIsError("");
+  };
 
-  // const handleLogin1 = async (e) => {
-  //   setLoading(true)
-  //   e.preventDefault();
-  //   try {
-  //     console.log(email,password);
-  //     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  //     console.log(userCredential);
-  //     const user = userCredential.user;
-  //     console.log('User:', user);
-  //     dispatch({ type: 'LOGIN', payload: user });
-  //     setLoading(false)
-  //     navigate('/index');
-  //   } catch (error) {
-  //     console.error('Login Error:', error);
-  //     setErr(true);
-  //     setLoading(false)
-  //   }
-  // };
-
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post("http://localhost:50129/api/GetToken", {
-  //       username,
-  //       password,
-  //     });
-  //     console.log(response.data);
-  //     const userData = response.data;
-  //     sessionStorage.setItem("userData", JSON.stringify(userData));
-  //     console.log(userData)
-  //     setLoading(false);
-  //     // navigate("/index");
-  //   } catch (error) {
-  //     console.error("Login Error:", error);
-  //     setErr(true);
-  //     setLoading(false);
-  //   }
-  // };
-
-  const handleLogin = async (e) => {
-    var credentials = userData.find((i) => i.userName == username);
-    if (credentials) {
-      if (credentials.password == password) {
-        console.log(username);
-        console.log(password);
-        navigate("/Home");
-      }
+  useEffect(() => {
+    if (username === "") {
+      setNotUser(true);
+      setUserError("Please input your Username!");
     }
-  };
+    if (password === "") {
+      setNotPassword(true);
+      setPasswordError("Please input your Password!");
+    }
+  });
 
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-  };
+  const handleLogin = useCallback(async () => {
+    console.log("Login button clicked");
+
+    try {
+      const resultAction = await dispatch(
+        fetchLogin({ Username: username, Password: password })
+      );
+
+      console.log("Result of fetchLogin:", resultAction);
+
+      if (fetchLogin.fulfilled.match(resultAction)) {
+        console.log("Login Successful:", resultAction.payload);
+        const credentials = resultAction.payload;
+
+        if (!credentials || !credentials.access_token) {
+          setIsError("Invalid Credentials");
+          setNotUser(true);
+          setUserError("Check your Username!");
+          setNotPassword(true);
+          setPasswordError("Check your Password!");
+        } else {
+          // Fetch user data after successful login
+          const userListAction = await dispatch(fetchUserDetails({ username }));
+
+          console.log("User List Response:", userListAction);
+
+          if (fetchUserDetails.fulfilled.match(userListAction)) {
+            const userData = userListAction.payload;
+
+            // Store user data in sessionStorage
+            Object.entries(userData).forEach(([key, value]) => {
+              sessionStorage.setItem(key, value);
+            });
+            navigate("/Home");
+            console.log("User data stored in sessionStorage:", userData);
+          } else {
+            console.error("Failed to fetch user list:", userListAction.payload);
+          }
+        }
+      } else {
+        console.error("Login Failed:", resultAction.payload);
+      }
+    } catch (error) {
+      console.error("Dispatch error:", error);
+    }
+  }, [dispatch, username, password]);
 
   return (
     <>
@@ -104,40 +98,51 @@ const Login = () => {
               initialValues={{
                 remember: true,
               }}
-              onFinish={handleLogin}
+              //onFinish={handleLogin}
             >
+              {isError !== "" ? (
+                <Alert
+                  message={isError}
+                  showIcon
+                  type="error"
+                  closable
+                  onClose={onClose}
+                />
+              ) : null}
+              <br />
               <Form.Item
                 name="username"
                 rules={[
                   {
-                    required: true,
-                    message: "Please input your Username!",
+                    required: { notUser },
+                    message: userError,
                   },
                 ]}
               >
                 <Input
                   prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Username"
                 />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[
                   {
-                    required: true,
-                    message: "Please input your Password!",
+                    required: { notPassword },
+                    message: passwordError,
                   },
                 ]}
               >
                 <Input.Password
-                    prefix={<LockOutlined className="site-form-item-icon" />}
-                  placeholder="input password"
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Form.Item>
+
               <Form.Item>
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                   <Checkbox>Remember me</Checkbox>
@@ -150,9 +155,12 @@ const Login = () => {
                   htmlType="submit"
                   style={{ width: "100%" }}
                   className="login-form-button"
+                  onClick={handleLogin}
                 >
-                  Log in
+                  {loading ? "Logging in..." : "Login"}
                 </Button>
+                {/* {error && <p style={{ color: "red" }}>Error: {error}</p>}
+                {user && <p>Welcome, {user.username}!</p>} */}
               </Form.Item>
             </Form>
           </Card>
@@ -160,12 +168,6 @@ const Login = () => {
       </div>
     </>
   );
-
-  // return(
-  //   <>
-  //   <Sidebar/>
-  //   </>
-  // )
 };
 
 export default Login;
